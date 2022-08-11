@@ -49,6 +49,8 @@ const Search = Decorator(class extends BaseFormField(BaseComponent(HTMLElement))
   constructor() {
     super();
 
+    console.log("heya");
+
     this._delegateEvents(commons.extend(this._events, {
       // @todo use Coral.keys when key combos don't interfere with single key execution
       'keydown [handle=input]': '_onEnterKey',
@@ -58,7 +60,9 @@ const Search = Decorator(class extends BaseFormField(BaseComponent(HTMLElement))
       'input [handle=input]': '_triggerInputEvent',
 
       'key:escape [handle=input]': '_clearInput',
-      'click [handle=clearButton]:not(:disabled)': '_clearInput'
+      'click [handle=clearButton]:not(:disabled)': '_clearInput',
+
+      'capture:focus [handle=clearButton]:not(:disabled)': '_onItemFocus',
     }));
 
     // Prepare templates
@@ -291,6 +295,16 @@ const Search = Decorator(class extends BaseFormField(BaseComponent(HTMLElement))
    */
   _updateClearButton() {
     this._elements.clearButton.style.display = this._elements.input.value === '' ? 'none' : '';
+  }
+
+  /**
+   Adds focus-ring and is-focused on the button.
+
+   @ignore
+   */
+  _onItemFocus(event) {
+    this._elements.selectList.classList.toggle('is-focused', true);
+    event.matchedTarget.classList.toggle('focus-ring', true);
   }
 
   /**
